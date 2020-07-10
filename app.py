@@ -89,7 +89,7 @@ async def on_message(message):
             await message.channel.send(f"{print_string}")
 
         elif content.startswith("help"):
-            await.message.channel.send("Use $balance or $balance <search string> to query the bank")
+            await message.channel.send("Use $balance or $balance <search string> to query the bank")
     # except Exception as e:
     #     print(e)
 
