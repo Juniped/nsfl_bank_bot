@@ -82,14 +82,20 @@ async def on_message(message):
             if len(m) == 0:
                 m = message.author.name
             data = get_data(m)
-            print_string = "Username, Player Name,Balance\n"
+            print_string = "Username, Player Name, Balance\n"
             for value in data:
             # random_int = random.randint(0,len(lines)-1)
                 print_string = print_string + f"{value[0]}, {value[1]}, {value[2]}" + "\n"
             await message.channel.send(f"{print_string}")
 
         elif content.startswith("help"):
-            await message.channel.send("Use $balance or $balance <search string> to query the bank")
+            await message.channel.send("""
+            Use `$balance` or`$balance <search string>` to query the bank\n
+            Use `$invite` to get an invite link
+            """)
+        
+        elif content.startswith("invite"):
+            await message.channel.send("https://discord.com/api/oauth2/authorize?client_id=731136702474747967&permissions=0&scope=bot")
     # except Exception as e:
     #     print(e)
 
