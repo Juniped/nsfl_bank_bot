@@ -142,8 +142,10 @@ async def on_message(message):
 
         elif content.startswith("help"):
             await message.channel.send("""
-            Use `$balance` or`$balance <search string>` to query the bank\n
-            Use `$invite` to get an invite link
+Use `$balance` or`$balance <search string>` to query the bank
+Use `$transactions`  or `$transactions <search string>` to get a list of your last 10 transactions
+Use `$invite` to get an invite link
+If you discord username is different then your jcink username you have to supply a search string. Either username for transactions or username/player name for balance.
             """)
         
         elif content.startswith("invite"):
