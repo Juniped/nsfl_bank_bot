@@ -95,7 +95,7 @@ def get_transactions(search_string):
     # Call the Sheets API
     sheet = service.spreadsheets()
     result = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID,
-                                range="Primary Log! A:I").execute()
+                                range="Primary Log!A:I").execute()
     values = result.get('values', [])
     # print(values)
     return_value = []
@@ -148,11 +148,14 @@ async def on_message(message):
             if len(m) == 0:
                 m = message.author.name
             data = get_transactions(m)
+            # print(data[-1])
             print_string = "Date, Username, Net Tran, Notes\n"
-            for value in data:
+            for value in data[-10:]:
             # random_int = random.randint(0,len(lines)-1)
-                print_string = print_string + f"{value[0]}, {value[1]}, {value[6]}, {value[8]}" + "\n"
-            await message.channel.send(f"{print_string}")
+                print_string = print_string + f"{value[0]}, {value[1]}, {value[2]}, {value[3]}" + "\n"
+            # print(print_string)
+            # print(len(print_string))
+            await message.channel.send(f"```{print_string}```")
     # except Exception as e:
     #     print(e)
 
