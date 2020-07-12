@@ -105,7 +105,13 @@ def get_transactions(search_string):
         print('Date','Username','Net','Notes')
         for row in values:
             if search_string.lower() in row[1].lower():
-                return_value.append([row[0],row[1],row[6],row[8]])
+                try:
+                    return_value.append([row[0],row[1],row[6],row[8]])
+                except:
+                    try:
+                        return_value.append([row[0],row[1],row[6]])
+                    except:
+                        continue
                 # Print columns A and E, which correspond to indices 0 and 4.
                 try:
                     print('%s, %s, %s, %s, %s' % (row[0],row[1],row[6],row[8]))
@@ -152,7 +158,10 @@ async def on_message(message):
             print_string = "Date, Username, Net Tran, Notes\n"
             for value in data[-10:]:
             # random_int = random.randint(0,len(lines)-1)
-                print_string = print_string + f"{value[0]}, {value[1]}, {value[2]}, {value[3]}" + "\n"
+                try:
+                    print_string = print_string + f"{value[0]}, {value[1]}, {value[2]}, {value[3]}" + "\n"
+                except:
+                    print_string = print_string + f"{value[0]}, {value[1]}, {value[2]}" + "\n"
             # print(print_string)
             # print(len(print_string))
             await message.channel.send(f"```{print_string}```")
