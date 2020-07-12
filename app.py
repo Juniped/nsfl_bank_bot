@@ -105,10 +105,10 @@ def get_transactions(search_string):
         print('Date','Username','Net','Notes')
         for row in values:
             if search_string.lower() in row[1].lower():
-                return_value.append([row[0],row[1],row[6],row[8])
+                return_value.append([row[0],row[1],row[6],row[8]])
                 # Print columns A and E, which correspond to indices 0 and 4.
                 try:
-                    print('%s, %s, %s, %s, %s' % ([row[0],row[1],row[6],row[8]))
+                    print('%s, %s, %s, %s, %s' % (row[0],row[1],row[6],row[8]))
                 except:
                     pass
     return return_value
@@ -128,10 +128,10 @@ async def on_message(message):
             if len(m) == 0:
                 m = message.author.name
             data = get_data(m)
-            print_string = "Date, Username, Net, Notes\n"
-            for value in data[-10:]:
+            print_string = "Username, Player Name, Balance\n"
+            for value in data:
             # random_int = random.randint(0,len(lines)-1)
-                print_string = print_string + f"{value[0]}, {value[1]}, {value[6]},{value[8]}" + "\n"
+                print_string = print_string + f"{value[0]}, {value[1]}, {value[2]}" + "\n"
             await message.channel.send(f"{print_string}")
 
         elif content.startswith("help"):
@@ -144,10 +144,15 @@ async def on_message(message):
             await message.channel.send("https://discord.com/api/oauth2/authorize?client_id=731136702474747967&permissions=0&scope=bot")
 
         elif content.startswith("transactions"):
-            m = content[6:].strip()
-             if len(m) == 0:
+            m = content[12:].strip()
+            if len(m) == 0:
                 m = message.author.name
             data = get_transactions(m)
+            print_string = "Date, Username, Net Tran, Notes\n"
+            for value in data:
+            # random_int = random.randint(0,len(lines)-1)
+                print_string = print_string + f"{value[0]}, {value[1]}, {value[6]}, {value[8]}" + "\n"
+            await message.channel.send(f"{print_string}")
     # except Exception as e:
     #     print(e)
 
