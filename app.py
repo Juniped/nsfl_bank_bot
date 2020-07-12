@@ -67,6 +67,52 @@ def get_data(search_string):
                     print('%s, %s' % (row[0],row[2]))
     return return_value
 
+def get_transactions(search_string):
+    """Shows basic usage of the Sheets API.
+    Prints values from a sample spreadsheet.
+    """
+    creds = None
+    # The file token.pickle stores the user's access and refresh tokens, and is
+    # created automatically when the authorization flow completes for the first
+    # time.
+    if os.path.exists('token.pickle'):
+        with open('token.pickle', 'rb') as token:
+            creds = pickle.load(token)
+    # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                'credentials.json', SCOPES)
+            creds = flow.run_local_server(port=0)
+        # Save the credentials for the next run
+        with open('token.pickle', 'wb') as token:
+            pickle.dump(creds, token)
+
+    service = build('sheets', 'v4', credentials=creds)
+
+    # Call the Sheets API
+    sheet = service.spreadsheets()
+    result = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID,
+                                range="Primary Log! A:I").execute()
+    values = result.get('values', [])
+    # print(values)
+    return_value = []
+    if not values:
+        print('No data found.')
+    else:
+        print('Date','Username','Net','Notes')
+        for row in values:
+            if search_string.lower() in row[1].lower():
+                return_value.append([row[0],row[1],row[6],row[8])
+                # Print columns A and E, which correspond to indices 0 and 4.
+                try:
+                    print('%s, %s, %s, %s, %s' % ([row[0],row[1],row[6],row[8]))
+                except:
+                    pass
+    return return_value
+
 @client.event
 async def on_message(message):
     # try:
@@ -82,10 +128,10 @@ async def on_message(message):
             if len(m) == 0:
                 m = message.author.name
             data = get_data(m)
-            print_string = "Username, Player Name, Balance\n"
-            for value in data:
+            print_string = "Date, Username, Net, Notes\n"
+            for value in data[-10:]:
             # random_int = random.randint(0,len(lines)-1)
-                print_string = print_string + f"{value[0]}, {value[1]}, {value[2]}" + "\n"
+                print_string = print_string + f"{value[0]}, {value[1]}, {value[6]},{value[8]}" + "\n"
             await message.channel.send(f"{print_string}")
 
         elif content.startswith("help"):
@@ -96,6 +142,12 @@ async def on_message(message):
         
         elif content.startswith("invite"):
             await message.channel.send("https://discord.com/api/oauth2/authorize?client_id=731136702474747967&permissions=0&scope=bot")
+
+        elif content.startswith("transactions"):
+            m = content[6:].strip()
+             if len(m) == 0:
+                m = message.author.name
+            data = get_transactions(m)
     # except Exception as e:
     #     print(e)
 
