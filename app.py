@@ -15,7 +15,8 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
 # The ID and range of a sample spreadsheet.
 SAMPLE_SPREADSHEET_ID = '1RYS8I7xCcq-HABK_tiGsaJ5saq6KNkhFJb53C11XqpU'
-SAMPLE_RANGE_NAME = 'Players!A2:D'
+SAMPLE_RANGE_NAME = 'Balances!A2:D'
+backup_sheet = "1Kjhgt39W6zWJi3cQCmjN1eF4E1RhMXxzfrzuwS3Ko64"
 
 @client.event
 async def on_ready():
@@ -48,7 +49,7 @@ def get_data(search_string):
 
     # Call the Sheets API
     sheet = service.spreadsheets()
-    result = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID,
+    result = sheet.values().get(spreadsheetId=backup_sheet,
                                 range=SAMPLE_RANGE_NAME).execute()
     values = result.get('values', [])
     # print(values)
@@ -94,8 +95,8 @@ def get_transactions(search_string):
 
     # Call the Sheets API
     sheet = service.spreadsheets()
-    result = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID,
-                                range="Primary Log!A:I").execute()
+    result = sheet.values().get(spreadsheetId=backup_sheet,
+                                range="Collated!A:D").execute()
     values = result.get('values', [])
     # print(values)
     return_value = []
@@ -106,10 +107,10 @@ def get_transactions(search_string):
         for row in values:
             if search_string.lower() in row[1].lower():
                 try:
-                    return_value.append([row[0],row[1],row[6],row[8]])
+                    return_value.append([row[0],row[1],row[2],row[3]])
                 except:
                     try:
-                        return_value.append([row[0],row[1],row[6]])
+                        return_value.append([row[0],row[1],row[2]])
                     except:
                         continue
                 # Print columns A and E, which correspond to indices 0 and 4.
